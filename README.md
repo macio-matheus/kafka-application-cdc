@@ -3,7 +3,7 @@
 ---
 
 #### Solution diagram
-![Solution](https://innersource.accenture.com/projects/BOTDATAPOC/repos/poa-o-boticario/raw/docs/solution.png)
+![Solution](https://raw.githubusercontent.com/DataGenPoc/kafka-application-cdc/master/docs/solution.png)
  
 
 Look this: https://github.com/debezium/debezium-examples/tree/master/tutorial
