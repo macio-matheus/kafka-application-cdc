@@ -1,0 +1,49 @@
+# Docker Compose Definitions for local Developer Environment
+version: '3'
+
+services:
+
+  zookeeper:
+    image: debezium/zookeeper:0.9
+    ports:
+    - 2181:2181
+    - 2888:2888
+    - 3888:3888
+
+  kafka:
+    image: debezium/kafka:0.9
+    ports:
+    - 9092:9092
+    links:
+    - zookeeper
+    environment:
+    - ZOOKEEPER_CONNECT=zookeeper:2181
+    volumes:
+    - ./mirror-maker:/kafka/mirror-maker
+    #command: bash -c "bin/kafka-mirror-maker.sh --consumer.config mirror-maker/source-kafka.config --num.streams 1 --producer.config mirror-maker/mirror-eventhub.config --whitelist='.*'"
+
+  sqlserver:
+    container_name: tutorial_sqlserver_1
+    image: microsoft/mssql-server-linux:2017-CU8
+    ports:
+    - 1433:1433
+    environment:
+    - ACCEPT_EULA=Y
+    - MSSQL_PID=Standard
+    - SA_PASSWORD=Password!
+
+  connect:
+    image: debezium/connect:0.9
+    ports:
+    - 8083:8083
+    links:
+    - kafka
+    - sqlserver
+    environment:
+    - BOOTSTRAP_SERVERS=kafka:9092
+    - GROUP_ID=1
+    - CONFIG_STORAGE_TOPIC=my_connect_configs
+    - OFFSET_STORAGE_TOPIC=my_connect_offsets
+    - STATUS_STORAGE_TOPIC=my_connect_statuses
+    - KAFKA_DEBUG=true
+    - DEBUG_SUSPEND_FLAG=n
