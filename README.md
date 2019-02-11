@@ -1,4 +1,4 @@
-### POA Stress Test
+### Kafka Application
 
 ---
 
